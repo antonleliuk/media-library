@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.access.expression.WebExpressionVoter
 import org.springframework.security.web.authentication.AuthenticationFailureHandler
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import ua.antonleliuk.medialibrary.security.authentication.AjaxAuthenticationFailureHandler
+import ua.antonleliuk.medialibrary.security.authentication.AjaxAuthenticationSuccessHandler
 import ua.antonleliuk.medialibrary.user.service.UserService
 
 /**
@@ -40,8 +42,6 @@ class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .anonymous().authorities(PRIV_ANONYMOUS)
                 .and()
                 .authorizeRequests()
-//                    .antMatchers("/app/login*").hasAnyAuthority(PRIV_ANONYMOUS, PRIV_SYSTEM_ENTRY)
-//                    .antMatchers("/app/*").hasAnyAuthority(PRIV_SYSTEM_ENTRY)
                     .antMatchers("/login/*").hasAnyAuthority(PRIV_ANONYMOUS, PRIV_SYSTEM_ENTRY)
                     .antMatchers("/logout").hasAnyAuthority(PRIV_ANONYMOUS, PRIV_SYSTEM_ENTRY)
                     .antMatchers("/*").hasAnyAuthority(PRIV_SYSTEM_ENTRY)
@@ -50,8 +50,8 @@ class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login-process")
-                    .defaultSuccessUrl("/home")
                     .failureUrl("/login")
+                    .successHandler(authenticationSuccessHandler())
                     .failureHandler(authenticationFailureHandler())
                     .permitAll()
                     .and()
@@ -91,5 +91,10 @@ class WebSecurityConfiguration : WebSecurityConfigurerAdapter() {
     @Bean
     fun authenticationFailureHandler() : AuthenticationFailureHandler {
         return AjaxAuthenticationFailureHandler()
+    }
+
+    @Bean
+    fun authenticationSuccessHandler() : AuthenticationSuccessHandler {
+        return AjaxAuthenticationSuccessHandler("/home")
     }
 }

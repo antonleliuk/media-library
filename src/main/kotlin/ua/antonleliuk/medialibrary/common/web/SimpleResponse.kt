@@ -5,5 +5,6 @@ package ua.antonleliuk.medialibrary.common.web
  */
 class SimpleResponse {
 
-    val errors: ErrorMessageContainer = ErrorMessageContainer()
+    var errors: ErrorMessageContainer? = null
+    var redirectUrl: String? = null
 }

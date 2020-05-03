@@ -75,7 +75,7 @@
             </not>
         </preConditions>
         <createTable tableName="user">
-            <column name="id" type="serial">
+            <column name="id" type="serial" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(100)">

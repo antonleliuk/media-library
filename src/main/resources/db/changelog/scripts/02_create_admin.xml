@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create_privileges" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="privilege" schemaName="public"/>
+        </preConditions>
+
+        <insert tableName="privilege">
+            <column name="code">SYSTEM_ENTRY</column>
+            <column name="name">Can login</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="create_role" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="role" schemaName="public"/>
+        </preConditions>
+
+        <insert tableName="role">
+            <column name="code">SUPER_USER</column>
+            <column name="name">Superuser role</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="link_role_privilege" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM public.privilege WHERE code = 'SYSTEM_ENTRY'</sqlCheck>
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM public.role WHERE code = 'SUPER_USER'</sqlCheck>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM public.role_privilege WHERE id_privilege = (SELECT id FROM public.privilege WHERE code = 'SYSTEM_ENTRY') AND id_role = (SELECT id FROM role WHERE code = 'SUPER_USER')</sqlCheck>
+        </preConditions>
+        <sql>
+            INSERT INTO public.role_privilege (id_privilege, id_role) VALUES ((SELECT id FROM public.privilege WHERE code = 'SYSTEM_ENTRY'), (SELECT id FROM role WHERE code = 'SUPER_USER'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="create_user" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user" schemaName="public"/>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM public.user WHERE username = 'antonio'</sqlCheck>
+        </preConditions>
+        <insert tableName="user">
+            <column name="username">antonio</column>
+            <column name="password">$2a$10$b2xK9bkrKR5q37k5pymW7uPikBfFOMZ8rYoP71ltgS7tXDnonWkxG</column>
+            <column name="enabled">true</column>
+            <column name="email">anton.leluk@gmail.com</column>
+            <column name="full_name">Anton Leliuk</column>
+            <column name="locked">false</column>
+        </insert>
+        <sql>INSERT INTO public.user_role (id_role, id_user) VALUES ((SELECT id FROM public.role WHERE code = 'SUPER_USER'), (SELECT id FROM public.user WHERE username = 'antonio'))</sql>
+    </changeSet>
+</databaseChangeLog>
