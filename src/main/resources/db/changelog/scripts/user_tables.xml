@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog logicalFilePath="db.changelog-master.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="privilege_table" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="privilege" schemaName="public"/>
+            </not>
+        </preConditions>
+        <createTable tableName="privilege">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(100)"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="role_table" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="role" schemaName="public"/>
+            </not>
+        </preConditions>
+        <createTable tableName="role">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="code" type="varchar(100)"/>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="role_privilege_table" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="role" schemaName="public"/>
+                <tableExists tableName="privilege" schemaName="public"/>
+                <not>
+                    <tableExists tableName="role_privilege" schemaName="public"/>
+                </not>
+            </and>
+        </preConditions>
+        <createTable tableName="role_privilege">
+            <column name="id_role" type="integer"/>
+            <column name="id_privilege" type="integer"/>
+        </createTable>
+        <addUniqueConstraint tableName="role_privilege" constraintName="unique_role_priv" columnNames="id_role,id_privilege"/>
+        <addForeignKeyConstraint baseTableName="role_privilege"
+                                 baseColumnNames="id_role"
+                                 constraintName="FK_role"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+        <addForeignKeyConstraint baseTableName="role_privilege"
+                                 baseColumnNames="id_privilege"
+                                 constraintName="FK_privilege"
+                                 referencedTableName="privilege"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+        <createIndex tableName="role_privilege" indexName="IDX_FK_role">
+            <column name="id_role" type="integer"/>
+        </createIndex>
+        <createIndex tableName="role_privilege" indexName="IDX_FK_privilege">
+            <column name="id_privilege" type="integer"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="user_table" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user" schemaName="public"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(100)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(512)"/>
+            <column name="enabled" type="boolean"/>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_name" type="varchar(255)"/>
+            <column name="locked" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="user_role_table" author="anton.leliuk" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="role" schemaName="public"/>
+                <tableExists tableName="user" schemaName="public"/>
+                <not>
+                    <tableExists tableName="user_role" schemaName="public"/>
+                </not>
+            </and>
+        </preConditions>
+        <createTable tableName="user_role">
+            <column name="id_user" type="integer"/>
+            <column name="id_role" type="integer"/>
+        </createTable>
+        <addUniqueConstraint tableName="user_role" columnNames="id_user,id_role" constraintName="unique_user_role"/>
+        <addForeignKeyConstraint baseTableName="user_role"
+                                 baseColumnNames="id_role"
+                                 constraintName="FK_ur_role"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+        <addForeignKeyConstraint baseTableName="user_role"
+                                 baseColumnNames="id_user"
+                                 constraintName="FK_ur_user"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"
+                                 deleteCascade="true"/>
+        <createIndex tableName="user_role" indexName="IDX_ur_role">
+            <column name="id_role" type="integer"/>
+        </createIndex>
+        <createIndex tableName="user_role" indexName="IDX_ur_user">
+            <column name="id_user" type="integer"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

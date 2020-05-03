@@ -1,0 +1,35 @@
+{
+  "name": "media-library",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Media library application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonleliuk/media-library.git"
+  },
+  "author": "Anton Leliuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antonleliuk/media-library/issues"
+  },
+  "homepage": "https://github.com/antonleliuk/media-library#readme",
+  "dependencies": {
+    "antd": "3.26.7",
+    "react": "16.12.0",
+    "react-dom": "16.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "@babel/preset-react": "7.9.4",
+    "babel-loader": "8.1.0",
+    "css-loader": "3.5.3",
+    "style-loader": "1.2.1",
+    "webpack": "4.43.0",
+    "webpack-cli": "3.3.11",
+    "webpack-dev-server": "3.10.3"
+  }
+}
