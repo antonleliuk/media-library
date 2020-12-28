@@ -1,0 +1,19 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <script th:inline="javascript"> var globalContextRoot = /*[[@{/}]]*/ ''; </script>
+
+<!--        <link rel="stylesheet" th:href="${'/static/'.concat(@manifestResolver.getByAlias('login.css'))}">-->
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto+Slab|Roboto:300,400,500,700" />
+    </head>
+    <body>
+        <div id="application"></div>
+    </body>
+
+    <script type="text/javascript" th:src="${'/static/'.concat(@manifestResolver.getByAlias('login.js'))}"></script>
+</html>

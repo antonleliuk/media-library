@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.2.6.RELEASE"
+	id("org.springframework.boot") version "2.3.1.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	kotlin("jvm") version "1.3.71"
-	kotlin("plugin.spring") version "1.3.71"
-	kotlin("plugin.jpa") version "1.3.71"
-	id("com.google.cloud.tools.jib") version "2.1.0"
+	kotlin("jvm") version "1.3.72"
+	kotlin("plugin.spring") version "1.3.72"
+	kotlin("plugin.jpa") version "1.3.72"
+//	id("com.google.cloud.tools.jib") version "2.1.0"
 	id("com.github.node-gradle.node") version "2.2.3"
 }
 
@@ -54,8 +54,12 @@ tasks.withType<Test> {
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "1.8"
+		jvmTarget = "11"
 	}
+}
+
+tasks.withType<ProcessResources> {
+	exclude("static/ui")
 }
 
 node {
@@ -86,12 +90,12 @@ node {
 	nodeModulesDir = file("${project.projectDir}")
 }
 
-jib {
-	from {
-		image = "openjdk:alpine"
-	}
-
-	to {
-		credHelper = "osxkeychain"
-	}
-}
+//jib {
+//	from {
+//		image = "openjdk:alpine"
+//	}
+//
+//	to {
+//		credHelper = "osxkeychain"
+//	}
+//}

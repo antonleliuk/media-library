@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import ua.antonleliuk.medialibrary.common.web.ErrorMessage
 import ua.antonleliuk.medialibrary.common.web.ErrorMessageContainer
 import ua.antonleliuk.medialibrary.common.web.SimpleResponse
+import java.io.OutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -22,7 +23,7 @@ class AjaxAuthenticationFailureHandler : AuthenticationFailureHandler {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    val exceptionMapping: Map<Class<out Exception>, String> =
+    private val exceptionMapping: Map<Class<out Exception>, String> =
             mapOf(
                     AuthenticationServiceException::class.java to defaultMessage,
                     BadCredentialsException::class.java to "User with this username and password does not exist.",
@@ -34,7 +35,7 @@ class AjaxAuthenticationFailureHandler : AuthenticationFailureHandler {
     override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
         val errorResponse = SimpleResponse()
         errorResponse.errors = ErrorMessageContainer()
-        errorResponse.errors!!.messages.add(ErrorMessage(exceptionMapping.getOrDefault(exception.javaClass, defaultMessage)))
+        errorResponse.errors!!.messages.add(ErrorMessage("login", exceptionMapping.getOrDefault(exception.javaClass, defaultMessage)))
 
         objectMapper.writeValue(response.outputStream, errorResponse)
         response.contentType = MediaType.APPLICATION_JSON_VALUE
