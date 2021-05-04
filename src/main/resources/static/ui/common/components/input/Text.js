@@ -4,6 +4,7 @@ import {observer, PropTypes} from "mobx-react"
 import TextField from "@material-ui/core/TextField"
 import {action} from "mobx"
 import ErrorMessageContainer from "../../error/ErrorMessageContainer"
+import FormValue from "../../model/FormValue"
 
 @observer
 export default class Text extends React.Component {
@@ -12,7 +13,7 @@ export default class Text extends React.Component {
         property: ReactPropTypes.string.isRequired,
         name: ReactPropTypes.string.isRequired,
         required: ReactPropTypes.bool,
-        value: PropTypes.observableObject,
+        value: ReactPropTypes.instanceOf(FormValue).isRequired,
         errorMessage: ReactPropTypes.instanceOf(ErrorMessageContainer).isRequired
     }
 

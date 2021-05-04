@@ -8,7 +8,7 @@ import {ThemeProvider} from "@material-ui/core"
 import GlobalStyles from "../../theme/GlobalStyles"
 
 configure({
-    enforceActions: "always",
+    enforceActions: "never",
     isolateGlobalState: true
 })
 

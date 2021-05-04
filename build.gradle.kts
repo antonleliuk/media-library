@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.3.1.RELEASE"
-	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	kotlin("jvm") version "1.3.72"
-	kotlin("plugin.spring") version "1.3.72"
-	kotlin("plugin.jpa") version "1.3.72"
-//	id("com.google.cloud.tools.jib") version "2.1.0"
+	id("org.springframework.boot") version "2.4.5"
+	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	kotlin("jvm") version "1.4.32"
+	kotlin("plugin.spring") version "1.4.32"
+	kotlin("plugin.jpa") version "1.4.32"
 	id("com.github.node-gradle.node") version "2.2.3"
+	id("org.hidetake.ssh") version "2.10.1"
 }
 
 group = "ua.antonleliuk"
@@ -62,6 +62,10 @@ tasks.withType<ProcessResources> {
 	exclude("static/ui")
 }
 
+tasks.withType<Jar> {
+	dependsOn("bundle")
+}
+
 node {
 	// Version of node to use.
 	version = "13.7.0"
@@ -90,12 +94,29 @@ node {
 	nodeModulesDir = file("${project.projectDir}")
 }
 
-//jib {
-//	from {
-//		image = "openjdk:alpine"
-//	}
-//
-//	to {
-//		credHelper = "osxkeychain"
-//	}
-//}
+tasks.register<com.moowork.gradle.node.npm.NpmTask>("bundle") {
+	setArgs(listOf("run", "build-prod"))
+}
+
+
+tasks.create(name = "pi-deploy") {
+	group = "deploy"
+	val piServer = remotes.create("pi") {
+		host = "192.168.1.36"
+		user = "pi"
+		password = "raspberry"
+	}
+
+	doLast {
+		ssh.run(delegateClosureOf<org.hidetake.groovy.ssh.core.RunHandler> {
+			session(piServer, delegateClosureOf<org.hidetake.groovy.ssh.session.SessionHandler> {
+				put(
+					hashMapOf(
+						"from" to "$buildDir/libs/media-library-$version.jar",
+						"into" to "/home/pi/workspace/media-library.jar"
+					)
+				)
+			})
+		})
+	}
+}

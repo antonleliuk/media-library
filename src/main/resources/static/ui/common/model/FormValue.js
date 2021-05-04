@@ -1,9 +1,13 @@
-import {action, observable} from "mobx"
+import {action, makeObservable, observable} from "mobx"
 
 export default class FormValue {
-    @observable nativeValue
+    nativeValue
 
     constructor(defaultValue) {
+        makeObservable(this, {
+            nativeValue: observable,
+            setValue: action
+        })
         if (!defaultValue) {
             this.setValue('')
         } else {
@@ -11,7 +15,7 @@ export default class FormValue {
         }
     }
 
-    @action setValue = (newValue) => {
+    setValue = (newValue) => {
         if (this.nativeValue) {
             this.nativeValue.set(newValue)
         } else {

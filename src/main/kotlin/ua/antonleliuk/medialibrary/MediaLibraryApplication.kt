@@ -2,6 +2,7 @@ package ua.antonleliuk.medialibrary
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
@@ -11,5 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 class MediaLibraryApplication
 
 fun main(args: Array<String>) {
-	runApplication<MediaLibraryApplication>(*args)
+	runApplication<MediaLibraryApplication>(*args) {
+		applicationStartup = BufferingApplicationStartup(10000)
+	}
 }

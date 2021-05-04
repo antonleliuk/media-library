@@ -1,16 +1,20 @@
 /* eslint-disable */
-const webpack = require('webpack');
 const path = require('path');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
     entry: {
-        login : "./src/main/resources/static/ui/pages/login/index.js"
+        'login' : "./src/main/resources/static/ui/pages/login/index.js",
+        'home': "./src/main/resources/static/ui/pages/home/index.js",
+        'not-found': './src/main/resources/static/ui/pages/errors/not-found.js',
+        'access-denied': './src/main/resources/static/ui/pages/errors/access-denied.js',
+        'error': './src/main/resources/static/ui/pages/errors/error.js',
     },
     output: {
         path: path.resolve(__dirname, 'src/main/resources/static/dist'),
-        filename: '[name].[hash].js'
+        filename: '[name].[chunkhash].js',
+        publicPath: ''
     },
     module: {
         rules: [
@@ -36,19 +40,20 @@ const config = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'styles.[hash].css',
-            chunkFilename: 'styles.[hash].css'
+            filename: 'styles.[fullhash].css',
+            chunkFilename: 'styles.[fullhash].css'
         }),
-        new ManifestPlugin()
+        new WebpackManifestPlugin()
     ],
     // optimization: {
-    //     runtimeChunk: 'single',
     //     splitChunks: {
+    //         chunks: 'all',
     //         cacheGroups: {
     //             vendor: {
     //                 test: /[\\/]node_modules[\\/]/,
     //                 name: 'vendors',
-    //                 chunks: 'all'
+    //                 chunks: 'all',
+    //                 filename: '[name].[fullhash].js'
     //             }
     //         }
     //     }
@@ -58,8 +63,9 @@ const config = {
 module.exports = (env, argv) => {
     if (argv.hot) {
         // Cannot use 'contenthash' when hot reloading is enabled.
-        config.output.filename = '[name].[hash].js';
+        config.output.filename = '[name].[fullhash].js';
     }
+
 
     return config;
 };

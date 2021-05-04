@@ -1,0 +1,13 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      lang="en" th:replace="~{page-template :: page-fragment ( ~{::title}, ~{:: #not-found-static-resources})}">
+<head>
+    <title>Page not found</title>
+</head>
+
+<th:block id="not-found-static-resources">
+    <script type="text/javascript" th:src="${'/static/'.concat(@manifestResolver.getByAlias('not-found.js'))}"></script>
+</th:block>
+
+
+</html>
