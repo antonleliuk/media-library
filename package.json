@@ -46,7 +46,7 @@
     "eslint-plugin-react": "7.23.2",
     "less-loader": "8.1.1",
     "mini-css-extract-plugin": "1.6.0",
-    "npm-check-updates": "11.5.10",
+    "npm-check-updates": "16.7.4",
     "style-loader": "2.0.0",
     "webpack": "5.36.2",
     "webpack-cli": "4.6.0",
