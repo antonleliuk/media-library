@@ -8,18 +8,18 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "user", schema = "public")
-class User : Identifier() {
+open class User : Identifier() {
 
-    val username: String? = null
-    val password: String? = null
-    val enabled: Boolean = false
-    val email: String? = null
+    open val username: String? = null
+    open val password: String? = null
+    open val enabled: Boolean = false
+    open val email: String? = null
     @Column(name = "full_name")
-    val fullName: String? = null
+    open val fullName: String? = null
     @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = [JoinColumn(name = "id_user")],
             inverseJoinColumns = [JoinColumn(name = "id_role")])
-    val roles: List<Role> = ArrayList()
-    val locked: Boolean = false
+    open val roles: List<Role> = ArrayList()
+    open val locked: Boolean = false
 }

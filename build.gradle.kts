@@ -1,18 +1,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.4.5"
+	id("org.springframework.boot") version "2.6.6"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	kotlin("jvm") version "1.4.32"
-	kotlin("plugin.spring") version "1.4.32"
-	kotlin("plugin.jpa") version "1.4.32"
-	id("com.github.node-gradle.node") version "2.2.3"
+	kotlin("jvm") version "1.6.10"
+	kotlin("plugin.spring") version "1.6.10"
+	kotlin("plugin.jpa") version "1.6.10"
+	id("com.github.node-gradle.node") version "3.2.1"
 	id("org.hidetake.ssh") version "2.10.1"
 }
 
 group = "ua.antonleliuk"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 configurations {
 	compileOnly {
@@ -38,6 +38,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.liquibase:liquibase-core")
+	implementation("com.github.csueiras.acme:spring-boot-starter-acme:0.1.0")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -54,7 +55,7 @@ tasks.withType<Test> {
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
+		jvmTarget = "17"
 	}
 }
 
@@ -68,35 +69,36 @@ tasks.withType<Jar> {
 
 node {
 	// Version of node to use.
-	version = "13.7.0"
+	version.set("16.14.2")
 
 	// Version of npm to use.
-	npmVersion = "6.13.6"
+//	npmVersion = "6.13.6"
+	npmVersion.set("8.7.0")
 
 	// Override the install command used by npmInstall
-	npmInstallCommand = "install"
+	npmInstallCommand.set("install")
 
 	// Base URL for fetching node distributions (change if you have a mirror).
 	// Or set to null if you want to add the repository on your own.
-	distBaseUrl = "https://nodejs.org/dist"
+	distBaseUrl.set("https://nodejs.org/dist")
 
 	// If true, it will download node using above parameters.
 	// If false, it will try to use globally installed node.
-	download = true
+	download.set(true)
 
 	// Set the work directory for unpacking node
-	workDir = file("${project.buildDir}/nodejs")
+	workDir.set(file("${project.projectDir}/.cache/nodejs"))
 
 	// Set the work directory for NPM
-	npmWorkDir = file("${project.buildDir}/npm")
+	npmWorkDir.set(file("${project.buildDir}/.cache/npm"))
 
 	// Set the work directory where node_modules should be located
-	nodeModulesDir = file("${project.projectDir}")
+	nodeProjectDir.set(file("${project.projectDir}"))
 }
 
-tasks.register<com.moowork.gradle.node.npm.NpmTask>("bundle") {
-	setArgs(listOf("run", "build-prod"))
-}
+//tasks.register<com.moowork.gradle.node.npm.NpmTask>("bundle") {
+//	setArgs(listOf("run", "build-prod"))
+//}
 
 
 tasks.create(name = "pi-deploy") {

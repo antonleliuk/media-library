@@ -7,6 +7,6 @@ import javax.persistence.MappedSuperclass
  */
 @MappedSuperclass
 open class NamedEntity : Identifier() {
-    val code: String? = null
-    val name: String? = null
+    open val code: String? = null
+    open val name: String? = null
 }

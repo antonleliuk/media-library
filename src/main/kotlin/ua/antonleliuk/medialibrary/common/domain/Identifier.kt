@@ -11,5 +11,5 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 open class Identifier {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long? = null
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) open val id: Long? = null
 }

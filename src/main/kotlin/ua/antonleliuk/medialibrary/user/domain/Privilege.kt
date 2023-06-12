@@ -10,9 +10,9 @@ import javax.persistence.Table
  */
 @Entity
 @Table(name = "privilege", schema = "public")
-class Privilege : NamedEntity() {
+open class Privilege : NamedEntity() {
 
     @ManyToMany(mappedBy = "privileges")
-    val roles: Set<Role>? = HashSet()
+    open val roles: Set<Role> = HashSet()
 
 }

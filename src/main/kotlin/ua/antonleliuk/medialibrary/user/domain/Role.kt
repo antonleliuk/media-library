@@ -8,11 +8,11 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "role", schema = "public")
-class Role : NamedEntity() {
+open class Role : NamedEntity() {
     @ManyToMany
     @JoinTable(
             name = "role_privilege",
             joinColumns = [JoinColumn(name = "id_role")],
             inverseJoinColumns = [JoinColumn(name = "id_privilege")])
-    val privileges: List<Privilege> = ArrayList()
+    open val privileges: List<Privilege> = ArrayList()
 }
